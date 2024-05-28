@@ -660,15 +660,23 @@ def add_all_recipe(call):
                 if ingredient in existing_ingredient:
                     found = True
                     existing_ingredient_parts = existing_ingredient.split(' - ')[1].split(' | ')
-
-                    new_quantity = int(quantity.split(' ')[0])
-                    new_name = quantity.split(' ')[1]
+                    if len(quantity.strip().split(' ')) == 1:
+                        try: 
+                            new_quantity = int(quantity.strip().split(' ')[0])
+                            new_name = " "
+                        except Exception as e:
+                            new_quantity = 1
+                            new_name = quantity.strip().split(' ')[1]
+                    else:
+                        new_quantity = int(quantity.strip().split(' ')[0])
+                        new_name = quantity.strip().split(' ')[1]
 
                     updated_ingredient_str = f"{ingredient} -"
 
                     b = True
 
                     for i in range(len(existing_ingredient_parts)):
+                        
                         existing_quantity = existing_ingredient_parts[i].split(' ')[0]
                         existing_name = ' '.join(existing_ingredient_parts[i].split(' ')[1:])
 
@@ -915,7 +923,7 @@ def edit_all_recipe_ingredients(call):
             current_ingredients_str += f"\nКак использовать:\n"
             current_ingredients_str += f"'ингредиент' - 0 - удаление ингредиента под номером 'число'\n"
             current_ingredients_str += f"'ингредиент' - 'любой текст' - добавление ингредиента\n"
-            current_ingredients_str += "\n\nВведите новые ингредиенты (каждый с новой строки):"
+            current_ingredients_str += "\nВведите новые ингредиенты (каждый с новой строки):"
             # Затем отправляем запрос на ввод новых ингредиентов
             sent_message = bot.send_message(call.message.chat.id, current_ingredients_str)
 
